@@ -1,6 +1,6 @@
 import os
 from django.conf import settings
-from langchain.document_loaders import PyPDFLoader, TextLoader
+from langchain_community.document_loaders import PyPDFLoader, TextLoader
 
 def load_documents():
     """

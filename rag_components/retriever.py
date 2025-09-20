@@ -1,4 +1,4 @@
-from langchain.vectorstores import Chroma
+from langchain_community.vectorstores import Chroma
 from django.conf import settings
 from .embeddings import get_embeddings
 import os
