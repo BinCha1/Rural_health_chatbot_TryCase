@@ -1,0 +1,349 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Rural Health
+Assistant{% endblock %} {% block content %}
+<div class="min-h-screen bg-gray-50">
+  <div class="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <!-- Header -->
+      <div class="bg-indigo-600 px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center">
+          <img
+            class="h-10 w-auto"
+            src="{% static 'images/logo.png' %}"
+            alt="Logo"
+          />
+          <h1 class="ml-3 text-xl font-semibold text-white">
+            Rural Health Assistant
+          </h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <a
+            href="{% url 'chat:chat_history' %}"
+            class="text-indigo-200 hover:text-white"
+          >
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </a>
+          <a
+            href="{% url 'accounts:logout' %}"
+            class="text-indigo-200 hover:text-white"
+          >
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Chat container -->
+      <div class="flex flex-col h-[calc(100vh-200px)]">
+        <!-- Chat messages -->
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-6 bg-gray-50">
+          <div class="space-y-4">
+            <!-- Welcome message -->
+            <div class="flex justify-start">
+              <div class="max-w-md bg-white rounded-lg shadow p-4">
+                <div class="flex items-start">
+                  <div class="flex-shrink-0">
+                    <div
+                      class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center"
+                    >
+                      <svg
+                        class="h-6 w-6 text-indigo-600"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-indigo-600">
+                      Health Assistant
+                    </p>
+                    <div class="mt-1 text-sm text-gray-700">
+                      <p>
+                        Hello {{ user.username }}! I'm your Rural Health
+                        Assistant. How can I help you today?
+                      </p>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500">Just now</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent chat history -->
+            {% for chat in recent_chats reversed %}
+            <div class="flex justify-end">
+              <div class="max-w-md bg-indigo-600 rounded-lg shadow p-4">
+                <div class="flex items-start">
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-white">You</p>
+                    <div class="mt-1 text-sm text-indigo-100">
+                      <p>{{ chat.question }}</p>
+                    </div>
+                    <p class="mt-1 text-xs text-indigo-200">
+                      {{ chat.timestamp|date:"H:i" }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-start">
+              <div class="max-w-md bg-white rounded-lg shadow p-4">
+                <div class="flex items-start">
+                  <div class="flex-shrink-0">
+                    <div
+                      class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center"
+                    >
+                      <svg
+                        class="h-6 w-6 text-indigo-600"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-indigo-600">
+                      Health Assistant
+                    </p>
+                    <div class="mt-1 text-sm text-gray-700">
+                      <p>{{ chat.answer }}</p>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500">
+                      {{ chat.timestamp|date:"H:i" }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Input area -->
+        <div class="border-t border-gray-200 p-4 bg-white">
+          <form id="chat-form" class="flex items-center">
+            {% csrf_token %}
+            <div class="flex-1">{{ chat_form.message }}</div>
+            <div class="ml-3 flex space-x-2">
+              <button
+                type="button"
+                id="voice-button"
+                class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                <svg
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                  />
+                </svg>
+              </button>
+              <button
+                type="submit"
+                id="send-button"
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Send
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading indicator (hidden by default) -->
+    <div id="loading-indicator" class="hidden mt-4 text-center">
+      <div class="inline-flex items-center">
+        <svg
+          class="animate-spin -ml-1 mr-2 h-5 w-5 text-indigo-600"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        <span class="text-sm text-gray-600">Thinking...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const chatForm = document.getElementById("chat-form");
+    const chatInput = document.getElementById("chat-input");
+    const chatMessages = document.getElementById("chat-messages");
+    const loadingIndicator = document.getElementById("loading-indicator");
+    const voiceButton = document.getElementById("voice-button");
+    const sendButton = document.getElementById("send-button");
+
+    // Auto-scroll to bottom of chat
+    function scrollToBottom() {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Initial scroll
+    scrollToBottom();
+
+    // Handle form submission
+    chatForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const message = chatInput.value.trim();
+      if (!message) return;
+
+      // Clear input
+      chatInput.value = "";
+
+      // Add user message to chat
+      const userMessageHtml = `
+                <div class="flex justify-end">
+                    <div class="max-w-md bg-indigo-600 rounded-lg shadow p-4">
+                        <div class="flex items-start">
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-white">You</p>
+                                <div class="mt-1 text-sm text-indigo-100">
+                                    <p>${message}</p>
+                                </div>
+                                <p class="mt-1 text-xs text-indigo-200">Just now</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+      chatMessages
+        .querySelector(".space-y-4")
+        .insertAdjacentHTML("beforeend", userMessageHtml);
+      scrollToBottom();
+
+      // Show loading indicator
+      loadingIndicator.classList.remove("hidden");
+      sendButton.disabled = true;
+
+      // Send message to server
+      fetch("{% url 'chat:send_message' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]")
+            .value,
+        },
+        body: new URLSearchParams({
+          message: message,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // Hide loading indicator
+          loadingIndicator.classList.add("hidden");
+          sendButton.disabled = false;
+
+          if (data.success) {
+            // Add bot response to chat
+            const botMessageHtml = `
+                        <div class="flex justify-start">
+                            <div class="max-w-md bg-white rounded-lg shadow p-4">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                                            <svg class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-indigo-600">Health Assistant</p>
+                                        <div class="mt-1 text-sm text-gray-700">
+                                            <p>${data.answer}</p>
+                                        </div>
+                                        <p class="mt-1 text-xs text-gray-500">Just now</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+            chatMessages
+              .querySelector(".space-y-4")
+              .insertAdjacentHTML("beforeend", botMessageHtml);
+            scrollToBottom();
+          } else {
+            // Show error message
+            alert("Error: " + (data.error || "Unknown error occurred"));
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          loadingIndicator.classList.add("hidden");
+          sendButton.disabled = false;
+          alert(
+            "An error occurred while sending your message. Please try again."
+          );
+        });
+    });
+
+    // Voice input (simplified - would need Web Speech API implementation)
+    voiceButton.addEventListener("click", function () {
+      alert(
+        "Voice input feature would be implemented here using the Web Speech API."
+      );
+    });
+  });
+</script>
+{% endblock %}

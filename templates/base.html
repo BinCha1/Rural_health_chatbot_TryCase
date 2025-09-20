@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Rural Health Assistant{% endblock %}</title>
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom styles -->
+    <style>
+      /* Custom scrollbar for chat messages */
+      #chat-messages::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      #chat-messages::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      #chat-messages::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+      }
+
+      #chat-messages::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.3s ease-out;
+      }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body class="bg-gray-50">
+    {% block content %}{% endblock %}
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="fixed bottom-4 right-4 z-50 space-y-2">
+      {% for message in messages %}
+      <div
+        class="fade-in max-w-xs bg-white rounded-lg shadow-lg p-4 {% if message.tags == 'error' %}border-l-4 border-red-500{% elif message.tags == 'success' %}border-l-4 border-green-500{% else %}border-l-4 border-blue-500{% endif %}"
+      >
+        <div class="flex">
+          <div class="flex-1">
+            <p class="text-sm font-medium text-gray-900">{{ message }}</p>
+          </div>
+          <div class="ml-4 flex-shrink-0 flex">
+            <button
+              class="inline-flex text-gray-400 hover:text-gray-500 focus:outline-none"
+              onclick="this.parentElement.parentElement.parentElement.remove()"
+            >
+              <svg
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- JavaScript -->
+    <script>
+      // Auto-hide messages after 5 seconds
+      document.addEventListener("DOMContentLoaded", function () {
+        const messages = document.querySelectorAll(
+          ".fixed.bottom-4.right-4 > div"
+        );
+        messages.forEach(function (message) {
+          setTimeout(function () {
+            message.style.opacity = "0";
+            setTimeout(function () {
+              message.remove();
+            }, 300);
+          }, 5000);
+        });
+      });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>
